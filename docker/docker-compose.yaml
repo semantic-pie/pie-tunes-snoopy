@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  pie-tunes-snoopy-prod:
+    image: pie-tunes-snoopy:latest
+    container_name: "pie-tunes-snoopy-prod"
+    networks:
+      - pie-tunes-network-prod
+    ports:
+      - "8886:8886"
+    restart: always
+    environment:
+      - SNOOPY_SPOTIFY_CLIENT_ID=${SNOOPY_SPOTIFY_CLIENT_ID}
+      - SNOOPY_SPOTIFY_CLIENT_SECRET=${SNOOPY_SPOTIFY_CLIENT_SECRET}
+networks:
+  pie-tunes-network-prod:
+    name: pie-tunes-network-prod
+    external: true
