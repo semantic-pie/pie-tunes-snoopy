@@ -2,19 +2,24 @@ package api.pietunes.snoopy.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties
 public class SpotifySearchResult {
     private TrackList tracks;
 
     @Data
+    @JsonIgnoreProperties
     public static class TrackList {
         private String href;
         private List<TrackItem> items;
     }
 
     @Data
+    @JsonIgnoreProperties
     public static class TrackItem {
         private Album album;
         private List<Artist> artists;
@@ -36,6 +41,7 @@ public class SpotifySearchResult {
     }
 
     @Data
+    @JsonIgnoreProperties
     public static class Album {
         private String album_type;
         private List<Artist> artists;
@@ -53,6 +59,7 @@ public class SpotifySearchResult {
     }
 
     @Data
+    @JsonIgnoreProperties
     public static class Artist {
         private ExternalUrls external_urls;
         private String href;
@@ -63,16 +70,19 @@ public class SpotifySearchResult {
     }
 
     @Data
+    @JsonIgnoreProperties
     public static class ExternalIds {
         private String isrc;
     }
 
     @Data
+    @JsonIgnoreProperties
     public static class ExternalUrls {
         private String spotify;
     }
 
     @Data
+    @JsonIgnoreProperties
     public static class Image {
         private int height;
         private String url;
