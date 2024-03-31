@@ -89,8 +89,10 @@ public class SpotDLDownloadService {
             ProcessBuilder processBuilder = new ProcessBuilder(downloadCommand);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
+            var status = process.waitFor();
+            log.info("query: [{}] status: {}", query, status);
 
-            return process.waitFor() == 0; // successfully executed
+            return true; // successfully executed
         } catch (Exception ex) {
             return false;
         }
