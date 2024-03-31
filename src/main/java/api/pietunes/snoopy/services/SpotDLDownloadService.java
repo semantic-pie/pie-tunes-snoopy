@@ -54,17 +54,17 @@ public class SpotDLDownloadService {
         }
     }
 
-    public Mono<Void> uploadFilesFromDirectory(String query, String directoryPath) {
+    public void uploadFilesFromDirectory(String query, String directoryPath) {
         File directory = new File(directoryPath);
         if (!directory.isDirectory()) {
             log.error("specified path is not a directory [{}]", directoryPath);
-            return Mono.error(new RuntimeException());
+            // return Mono.error(new RuntimeException());
         }
 
         File[] files = directory.listFiles();
         if (files == null || files.length == 0) {
             log.error("no files found in the directory");
-            return Mono.error(new RuntimeException());
+            // return Mono.error(new RuntimeException());
         }
 
         for (File file : files) {
@@ -72,11 +72,11 @@ public class SpotDLDownloadService {
                 domainFeignClient.uploadFile(new MultipartFileInMem(file));
             } catch (Exception e) {
                 log.info("query: [{}] [uploading] execution failed", query);
-                return Mono.error(new RuntimeException());
+                // return Mono.error(new RuntimeException());
             }
         }
 
-        return Mono.empty();
+        // return Mono.empty();
     }
 
     private boolean createSpotDLProcess(String query, String bufferDirectory) {
