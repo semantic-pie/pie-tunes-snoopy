@@ -88,12 +88,17 @@ public class SpotDLDownloadService {
 
             log.info("query: [{}] generated command: [{}]", query, Arrays.toString(downloadCommand));
 
+            log.info("любимка");
             ProcessBuilder processBuilder = new ProcessBuilder(downloadCommand);
+            log.info("работай");
             processBuilder.redirectErrorStream(true);
+            log.info("пожалуйста");
             Process process = processBuilder.start();
+            log.info("любимка");
 
             // Read output from the process
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            log.info("любимка");
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
