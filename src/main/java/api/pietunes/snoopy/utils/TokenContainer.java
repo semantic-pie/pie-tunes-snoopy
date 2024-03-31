@@ -3,9 +3,6 @@ package api.pietunes.snoopy.utils;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class TokenContainer {
     private static final Map<String, String> tokenMap = new ConcurrentHashMap<>();
 
