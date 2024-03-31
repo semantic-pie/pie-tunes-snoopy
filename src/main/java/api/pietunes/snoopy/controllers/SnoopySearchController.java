@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 @RestController
 @CrossOrigin("*")
 @AllArgsConstructor
@@ -22,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SnoopySearchController {
 
     private final SnoopySearchService searchService;
-    
+
     @GetMapping("/search")
     public Mono<List<Track>> search(@RequestParam String q) {
         return searchService.search(q);
-    } 
+    }
 }

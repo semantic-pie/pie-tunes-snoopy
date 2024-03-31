@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import feign.form.spring.SpringFormEncoder;
 
 @Configuration
-public class FeignConf1 {
+public class PieTunesClientFeignConfiguration {
 
     @Bean
     SpringFormEncoder feignFormEncoder(ObjectFactory<HttpMessageConverters> messageConverters) {

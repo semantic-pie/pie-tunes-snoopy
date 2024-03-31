@@ -6,7 +6,6 @@ import lombok.Data;
 public class Track {
     private String title;
     private Long lengthInMilliseconds;
-    // private List<String> genres;
     private String bandName;
     private String coverUrl;
 }

@@ -1,150 +1,111 @@
 package api.pietunes.snoopy.services;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import api.pietunes.snoopy.clients.PieTunesDomainFeignClient;
-import lombok.AllArgsConstructor;
+import api.pietunes.snoopy.utils.MultipartFileInMem;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SpotDLDownloadService {
+
+    @Value("${snoopy.buffer-directory}")
+    private String bufferDirectory;
 
     private final PieTunesDomainFeignClient domainFeignClient;
 
-    public Mono<String> download(String query) {
-        // String[] command = { "spotdl", "/path/to/your/script.sh" };
+    public Mono<Void> download(String query) {
         if (query != null && !query.isEmpty()) {
             try {
-                String home = "/Users/glebchanskiy/workflow/pie-tunes/pie-tunes-snoopy-scripts/";
-                var dir = UUID.randomUUID().toString();
+                // every track has his own directory, (костыль, to avoid determine the name of
+                // the final file)
+                var uniquePath = bufferDirectory + UUID.randomUUID().toString();
 
-                String[] command = { "spotdl", "download", "'" + query + "'", "--format=mp3", "--output=" + home + dir };
+                // process query via spotdl download command
+                var ok = createSpotDLProcess(query, uniquePath);
 
-                log.info("command: {}", Arrays.toString(command));
-                // Start the process builder
-                ProcessBuilder processBuilder = new ProcessBuilder(command);
-
-                // Set any environment variables if needed
-                // processBuilder.environment().put("VAR_NAME", "VAR_VALUE");
-
-                // Redirect error stream to output stream
-                processBuilder.redirectErrorStream(true);
-
-                // Start the process
-                Process process = processBuilder.start();
-
-                // Read output from the process
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-
-                // Wait for the process to finish
-                int exitCode = process.waitFor();
-                if (exitCode == 0) {
-
-                    uploadFilesFromDirectory(home + dir);
-                    log.info("SUCCESSFULLY");
+                if (ok) {
+                    log.info("query: [{}] [downloading] executed successfully", query);
+                    // upload via pie-tunes-domain uploader
+                    uploadFilesFromDirectory(query, uniquePath);
+                    log.info("query: [{}] [uploading] executed successfully", query);
                 } else {
-                    log.info("FAILED");
+                    log.info("query: [{}] [downloading] execution failed", query);
+                    return Mono.error(new RuntimeException("Download failed"));
                 }
-                return Mono.just("OK");
-            } catch (Exception ex) {
-                return Mono.just("ERR");
-            }
 
+                clearDirectory(uniquePath);
+
+                return Mono.empty();
+            } catch (Exception ex) {
+                return Mono.error(ex);
+            }
+        }  else {
+            return Mono.error(new RuntimeException());
+        }
+    }
+
+    public Mono<Void> uploadFilesFromDirectory(String query, String directoryPath) {
+        File directory = new File(directoryPath);
+        if (!directory.isDirectory()) {
+            log.error("specified path is not a directory [{}]", directoryPath);
+            return Mono.error(new RuntimeException());
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null || files.length == 0) {
+            log.error("no files found in the directory");
+            return Mono.error(new RuntimeException());
+        }
+
+        for (File file : files) {
+            try {
+                domainFeignClient.uploadFile(new MultipartFileInMem(file));
+            } catch (Exception e) {
+                log.info("query: [{}] [uploading] execution failed", query);
+                return Mono.error(new RuntimeException());
+            }
         }
 
         return Mono.empty();
     }
 
-    public void uploadFilesFromDirectory(String directoryPath) {
-        File directory = new File(directoryPath);
-        if (!directory.isDirectory()) {
-            log.info("Specified path is not a directory.");
-            return;
+    private boolean createSpotDLProcess(String query, String bufferDirectory) {
+        try {
+            String[] downloadCommand = { "spotdl", "download", "'" + query + "'", "--format=mp3",
+                    "--output=" + bufferDirectory };
+
+            log.info("query: [{}] generated command: [{}]", query, Arrays.toString(downloadCommand));
+
+            ProcessBuilder processBuilder = new ProcessBuilder(downloadCommand);
+            processBuilder.redirectErrorStream(true);
+            Process process = processBuilder.start();
+
+            return process.waitFor() == 0; // successfully executed
+        } catch (Exception ex) {
+            return false;
         }
+    }
 
-        File[] files = directory.listFiles();
-        if (files == null || files.length == 0) {
-            log.info("No files found in the directory.");
-            return;
-        }
+    private boolean clearDirectory(String path) {
+        try {
+            String[] clearCommand = { "rm", "-rf", path };
 
-        for (File file : files) {
-            try {
-                MultipartFile multipartFile = new MultipartFile() {
+            ProcessBuilder processBuilder = new ProcessBuilder(clearCommand);
+            Process process = processBuilder.start();
 
-                    @Override
-                    public String getName() {
-                        return file.getName();
-                    }
-
-                    @Override
-                    public String getOriginalFilename() {
-                        return file.getName();
-                    }
-
-                    @Override
-                    public String getContentType() {
-                        try {
-                            return Files.probeContentType(file.toPath());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            return "application/octet-stream";
-                        }
-                    }
-
-                    @Override
-                    public boolean isEmpty() {
-                        return file.length() == 0;
-                    }
-
-                    @Override
-                    public long getSize() {
-                        return file.length();
-                    }
-
-                    @Override
-                    public byte[] getBytes() throws IOException {
-                        return Files.readAllBytes(file.toPath());
-                    }
-
-                    @Override
-                    public InputStream getInputStream() throws IOException {
-                        return Files.newInputStream(file.toPath());
-                    }
-
-                    @Override
-                    public void transferTo(File dest) throws IOException, IllegalStateException {
-                        Files.copy(file.toPath(), dest.toPath());
-                    }
-                };
-
-                // File file = new File("src/test/resources/validation.txt");
-                // DiskFileItem fileItem = new DiskFileItem("file", "text/plain", false, file.getName(), (int) file.length() , file.getParentFile());
-                // fileItem.getOutputStream();
-                // MultipartFile multipa/rtFile = new MultipartFile()
-
-                domainFeignClient.uploadFile(multipartFile);
-                break;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            return process.waitFor() == 0; // successfully executed
+        } catch (Exception ex) {
+            return false;
         }
     }
 

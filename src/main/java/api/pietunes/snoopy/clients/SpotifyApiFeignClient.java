@@ -5,11 +5,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import api.pietunes.snoopy.config.FeignConf2;
+import api.pietunes.snoopy.config.SpotifyClientFeignConfiguration;
 import api.pietunes.snoopy.models.SpotifySearchResult;
 
 @Component
-@FeignClient(name = "spotifyClient", url = "https://api.spotify.com/v1", configuration = FeignConf2.class)
+@FeignClient(name = "spotifyClient", url = "https://api.spotify.com/v1", configuration = SpotifyClientFeignConfiguration.class)
 public interface SpotifyApiFeignClient {
     @GetMapping("/search")
     SpotifySearchResult searchItems(

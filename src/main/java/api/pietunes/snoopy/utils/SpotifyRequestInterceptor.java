@@ -3,8 +3,6 @@ package api.pietunes.snoopy.utils;
 import org.springframework.stereotype.Component;
 
 import api.pietunes.snoopy.clients.SpotifyApiFeignClient;
-
-import api.pietunes.snoopy.config.TokenContainer;
 import api.pietunes.snoopy.services.SpotifyLoginService;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

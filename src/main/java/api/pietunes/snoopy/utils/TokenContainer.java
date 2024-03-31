@@ -1,4 +1,4 @@
-package api.pietunes.snoopy.config;
+package api.pietunes.snoopy.utils;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

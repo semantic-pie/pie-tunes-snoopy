@@ -9,8 +9,10 @@ import api.pietunes.snoopy.clients.SpotifyApiFeignClient;
 import api.pietunes.snoopy.models.SpotifySearchResult;
 import api.pietunes.snoopy.models.Track;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class SnoopySearchService {
@@ -18,6 +20,7 @@ public class SnoopySearchService {
     private final SpotifyApiFeignClient spotifyApiFeignClient;
 
     public Mono<List<Track>> search(String query) {
+        log.info("execution query: [{}]", query);
         return searchTrack(query)
                 .map(this::mapToTrack);
     }
