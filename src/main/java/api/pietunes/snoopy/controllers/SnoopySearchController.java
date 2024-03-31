@@ -9,12 +9,14 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
 public class SnoopySearchController {
 
     private final SnoopySearchService searchService;
