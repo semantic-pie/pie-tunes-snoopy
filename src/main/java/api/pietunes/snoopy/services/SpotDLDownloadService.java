@@ -109,6 +109,8 @@ public class SpotDLDownloadService {
 
             return true; // successfully executed
         } catch (Exception ex) {
+            log.info("errrrrr: {}", ex.getMessage());
+            ex.printStackTrace();
             return false;
         }
     }
