@@ -20,7 +20,7 @@ public class SpotifyDownloadController {
     private final SpotDLDownloadService downloadService;
 
     @GetMapping("/spotify/download")
-    public Mono<Void> download(@RequestParam String query) {
-        return downloadService.download(query);
+    public Mono<String> download(@RequestParam String query) {
+        return downloadService.download(query).then(Mono.just("uploaded"));
     }
 }
