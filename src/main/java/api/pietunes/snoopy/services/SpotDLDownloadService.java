@@ -3,6 +3,8 @@ package api.pietunes.snoopy.services;
 import java.io.File;
 import java.util.Arrays;
 import java.util.UUID;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -49,7 +51,7 @@ public class SpotDLDownloadService {
             } catch (Exception ex) {
                 return Mono.error(ex);
             }
-        }  else {
+        } else {
             return Mono.error(new RuntimeException());
         }
     }
@@ -89,6 +91,14 @@ public class SpotDLDownloadService {
             ProcessBuilder processBuilder = new ProcessBuilder(downloadCommand);
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
+
+            // Read output from the process
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
             var status = process.waitFor();
             log.info("query: [{}] status: {}", query, status);
 
