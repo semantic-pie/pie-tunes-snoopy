@@ -28,7 +28,7 @@ public class SpotDLDownloadService {
             try {
                 // every track has his own directory, (костыль, to avoid determine the name of
                 // the final file)
-                var uniquePath = bufferDirectory + '/' + UUID.randomUUID().toString();
+                var uniquePath = bufferDirectory + '/' + UUID.randomUUID().toString().replace('-', '_');
 
                 // process query via spotdl download command
                 var ok = createSpotDLProcess(query, uniquePath);
