@@ -3,8 +3,6 @@ package api.pietunes.snoopy.services;
 import java.io.File;
 import java.util.Arrays;
 import java.util.UUID;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -60,13 +58,13 @@ public class SpotDLDownloadService {
         File directory = new File(directoryPath);
         if (!directory.isDirectory()) {
             log.error("specified path is not a directory [{}]", directoryPath);
-            // return Mono.error(new RuntimeException());
+            return;
         }
 
         File[] files = directory.listFiles();
         if (files == null || files.length == 0) {
             log.error("no files found in the directory");
-            // return Mono.error(new RuntimeException());
+            return;
         }
 
         for (File file : files) {
@@ -75,11 +73,8 @@ public class SpotDLDownloadService {
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 log.info("query: [{}] [uploading] execution failed", query);
-                // return Mono.error(new RuntimeException());
             }
         }
-
-        // return Mono.empty();
     }
 
     private boolean createSpotDLProcess(String query, String bufferDirectory) {
@@ -89,28 +84,23 @@ public class SpotDLDownloadService {
 
             log.info("query: [{}] generated command: [{}]", query, Arrays.toString(downloadCommand));
 
-            log.info("любимка");
             ProcessBuilder processBuilder = new ProcessBuilder(downloadCommand);
-            log.info("работай");
             processBuilder.redirectErrorStream(true);
-            log.info("пожалуйста");
             Process process = processBuilder.start();
-            log.info("любимка");
 
             // Read output from the process
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            log.info("любимка");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
+            // BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            // String line;
+            // while ((line = reader.readLine()) != null) {
+            //     System.out.println(line);
+            // }
 
             var status = process.waitFor();
             log.info("query: [{}] status: {}", query, status);
 
             return true; // successfully executed
         } catch (Exception ex) {
-            log.info("errrrrr: {}", ex.getMessage());
+            log.info("query: [{}] error: {}", ex.getMessage());
             ex.printStackTrace();
             return false;
         }

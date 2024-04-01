@@ -29,6 +29,7 @@ public class SnoopySearchService {
         List<Track> tracks = new ArrayList<>();
         for (var item : searchResponse.getTracks().getItems()) {
             Track track = new Track();
+            track.setId(item.getId());
             track.setTitle(item.getName());
             track.setLengthInMilliseconds(item.getDuration_ms());
             track.setBandName(item.getArtists().get(0).getName());
