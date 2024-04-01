@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import api.pietunes.snoopy.config.PieTunesClientFeignConfiguration;
 
-@FeignClient(name = "fileUploadClient", url = "http://192.168.192.70:8080/api/track-loader", configuration = PieTunesClientFeignConfiguration.class)
+@FeignClient(name = "fileUploadClient", url = "${snoopy.uploader_url}", configuration = PieTunesClientFeignConfiguration.class)
 public interface PieTunesDomainFeignClient {
 
     @PostMapping(value = "/upload-one", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

@@ -73,6 +73,7 @@ public class SpotDLDownloadService {
             try {
                 domainFeignClient.uploadFile(new MultipartFileInMem(file));
             } catch (Exception e) {
+                log.error(e.getMessage(), e);
                 log.info("query: [{}] [uploading] execution failed", query);
                 // return Mono.error(new RuntimeException());
             }
