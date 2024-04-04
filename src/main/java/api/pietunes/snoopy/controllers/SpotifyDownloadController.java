@@ -3,6 +3,7 @@ package api.pietunes.snoopy.controllers;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import api.pietunes.snoopy.models.TrackLoaderResponse;
 import api.pietunes.snoopy.services.SpotDLDownloadService;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -20,7 +21,7 @@ public class SpotifyDownloadController {
     private final SpotDLDownloadService downloadService;
 
     @GetMapping("/spotify/download")
-    public Mono<String> download(@RequestParam String query) {
-        return downloadService.download(query).then(Mono.just("uploaded"));
+    public Mono<TrackLoaderResponse> download(@RequestParam String query) {
+        return downloadService.download(query);
     }
 }

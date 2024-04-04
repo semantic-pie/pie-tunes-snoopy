@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import api.pietunes.snoopy.clients.PieTunesDomainFeignClient;
+import api.pietunes.snoopy.models.TrackLoaderResponse;
 import api.pietunes.snoopy.utils.MultipartFileInMem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ public class SpotDLDownloadService {
 
     private final PieTunesDomainFeignClient domainFeignClient;
 
-    public Mono<Void> download(String query) {
+    public Mono<TrackLoaderResponse> download(String query) {
         if (query != null && !query.isEmpty()) {
             try {
                 // every track has his own directory, (костыль, to avoid determine the name of
@@ -36,16 +37,17 @@ public class SpotDLDownloadService {
                 if (ok) {
                     log.info("query: [{}] [downloading] executed successfully", query);
                     // upload via pie-tunes-domain uploader
-                    uploadFilesFromDirectory(query, uniquePath);
-                    log.info("query: [{}] [uploading] executed successfully", query);
+                    return uploadFilesFromDirectory(query, uniquePath).map(d -> {
+                        log.info("query: [{}] [uploading] executed successfully", query);
+                        clearDirectory(uniquePath);
+                        return d;
+                    });
+                    
                 } else {
+                    clearDirectory(uniquePath);
                     log.info("query: [{}] [downloading] execution failed", query);
                     return Mono.error(new RuntimeException("Download failed"));
                 }
-
-                clearDirectory(uniquePath);
-
-                return Mono.empty();
             } catch (Exception ex) {
                 return Mono.error(ex);
             }
@@ -54,27 +56,28 @@ public class SpotDLDownloadService {
         }
     }
 
-    public void uploadFilesFromDirectory(String query, String directoryPath) {
+    public Mono<TrackLoaderResponse> uploadFilesFromDirectory(String query, String directoryPath) {
         File directory = new File(directoryPath);
         if (!directory.isDirectory()) {
             log.error("specified path is not a directory [{}]", directoryPath);
-            return;
+            return Mono.error(new RuntimeException());
         }
 
         File[] files = directory.listFiles();
         if (files == null || files.length == 0) {
             log.error("no files found in the directory");
-            return;
+            return Mono.error(new RuntimeException());
         }
 
         for (File file : files) {
             try {
-                domainFeignClient.uploadFile(new MultipartFileInMem(file));
+                return Mono.just(domainFeignClient.uploadFile(new MultipartFileInMem(file)));
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 log.info("query: [{}] [uploading] execution failed", query);
             }
         }
+        return Mono.empty();
     }
 
     private boolean createSpotDLProcess(String query, String bufferDirectory) {
