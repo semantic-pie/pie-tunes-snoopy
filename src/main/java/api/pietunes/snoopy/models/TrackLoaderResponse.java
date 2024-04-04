@@ -6,6 +6,7 @@ import lombok.Data;
 public class TrackLoaderResponse {
     private Track uploadedTrack;
 
+    @Data
     private static class Track {
          private String uuid;
     }
