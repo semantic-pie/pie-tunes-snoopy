@@ -25,6 +25,9 @@ public class TokenContainer {
 
     public static String getToken(String identifier) {
         Token token = tokenMap.get(identifier);
+
+        if (token == null) return null;
+        
         long currentTime = System.currentTimeMillis();
         
         if ((token.getCreatedAt() + expirationTime) <= currentTime) {
