@@ -11,8 +11,8 @@ RUN  apk update \
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update --no-cache python3 py3-pip && ln -sf python3 /usr/bin/python
 RUN pip3 install --no-cache --break-system-packages --upgrade pip setuptools
-RUN pip3 install --break-system-packages spotdl && spotdl --download-ffmpeg
-
+RUN pip3 install --break-system-packages spotdl 
+RUN apk add --no-cache ffmpeg
 RUN mkdir -p /opt/spotdl_tmp
 
 ARG JAR_FOLDER
