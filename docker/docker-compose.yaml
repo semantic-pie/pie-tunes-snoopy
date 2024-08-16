@@ -9,7 +9,7 @@ services:
       - "8886:8886"
     restart: always
     environment:
-      - SNOOPY_UPLOADER_URL=http://pie-tunes-domain:8080/api/track-loader
+      - SNOOPY_UPLOADER_URL=${SNOOPY_UPLOADER_URL}
       - SNOOPY_SPOTIFY_CLIENT_ID=${SNOOPY_SPOTIFY_CLIENT_ID}
       - SNOOPY_SPOTIFY_CLIENT_SECRET=${SNOOPY_SPOTIFY_CLIENT_SECRET}
 networks:
