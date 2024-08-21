@@ -12,14 +12,7 @@ public class SpotifyErrorDecoder implements ErrorDecoder {
 
     @Override
     public Exception decode(String methodKey, Response response) {
-        // var status = response.status();
-
-        // if (status == 401 || status == 403) {
-        //     loginService.loginAndGetToken();
-        // }
         loginService.loginAndGetToken();
-        
         return feign.FeignException.errorStatus(methodKey, response);
     }
-
 }

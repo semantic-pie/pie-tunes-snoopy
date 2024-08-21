@@ -17,6 +17,11 @@ import reactor.core.publisher.Mono;
 @AllArgsConstructor
 public class SnoopySearchService {
 
+    private final String[] SPOTIFY_SEARCH_PARAM_TYPES = new String[] { "track" };
+    private final String SPOTIFY_SEARCH_PARAM_MARKET = "ES";
+    private final Integer SPOTIFY_SEARCH_PARAM_LIMIT = 5;
+    private final Integer SPOTIFY_SEARCH_PARAM_OFFSET = 0;
+
     private final SpotifyApiFeignClient spotifyApiFeignClient;
 
     public Mono<List<Track>> search(String query) {
@@ -32,7 +37,7 @@ public class SnoopySearchService {
             track.setId(item.getId());
             track.setTitle(item.getName());
             track.setLengthInMilliseconds(item.getDuration_ms());
-            track.setBandName(item.getArtists().get(0).getName());
+            track.setBandName(item.getArtists().get(0).getName()); // hardcode for now
             track.setCoverUrl(item.getAlbum().getImages().get(0).getUrl());
 
             tracks.add(track);
@@ -42,6 +47,12 @@ public class SnoopySearchService {
     }
 
     private Mono<SpotifySearchResult> searchTrack(String query) {
-        return Mono.just(spotifyApiFeignClient.searchItems(query, new String[] { "track" }, "ES", 5, 0, null));
+        return Mono.just(spotifyApiFeignClient.searchItems(
+                query,
+                SPOTIFY_SEARCH_PARAM_TYPES,
+                SPOTIFY_SEARCH_PARAM_MARKET,
+                SPOTIFY_SEARCH_PARAM_LIMIT,
+                SPOTIFY_SEARCH_PARAM_OFFSET,
+                null));
     }
 }
