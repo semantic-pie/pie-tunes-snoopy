@@ -1,4 +1,4 @@
-package api.pietunes.snoopy.clients;
+package api.pietunes.snoopy.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import api.pietunes.snoopy.config.SpotifyClientFeignConfiguration;
-import api.pietunes.snoopy.models.SpotifySearchResult;
+import api.pietunes.snoopy.model.SpotifySearchResult;
 
 @Component
-@FeignClient(name = "spotifyClient", url = "https://api.spotify.com/v1", configuration = SpotifyClientFeignConfiguration.class)
+@FeignClient(name = "${snoopy.client.spotify-api.name}", url = "${snoopy.client.spotify-api.url.base}", configuration = SpotifyClientFeignConfiguration.class)
 public interface SpotifyApiFeignClient {
-    @GetMapping("/search")
+    @GetMapping("${snoopy.client.spotify-api.url.endpoints.search}")
     SpotifySearchResult searchItems(
             @RequestParam("q") String query,
             @RequestParam(value = "type", defaultValue = "track", required = false) String[] types,

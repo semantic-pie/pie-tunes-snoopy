@@ -1,0 +1,33 @@
+
+spring:
+    application:
+        name: snoopy
+server:
+    port: 8886
+
+snoopy: 
+    client:
+        pie-tunes-uploader:
+            name: file-upload-client
+            url:
+                base: ${SNOOPY_UPLOADER_URL:http://127.0.0.1:8080/api/track-loader}
+                endpoints:
+                    upload-one: ${SNOOPY_UPLOADER_UPLOAD_ONE_URL:/upload-one}
+            
+        spotify-api:
+            name: spotify-api-client
+            url:
+                base: ${SNOOPY_SPOTIFY_API_URL:https://api.spotify.com/v1}
+                endpoints:
+                    search: ${SNOOPY_SPOTIFY_SEARCH_API_URL:/search}
+                    
+        spotify-auth:
+            name: spotify-auth-client
+            client-id: ${SNOOPY_SPOTIFY_CLIENT_ID}
+            client-secret: ${SNOOPY_SPOTIFY_CLIENT_SECRET}
+            url:
+                base: ${SNOOPY_SPOTIFY_AUTH_URL:https://accounts.spotify.com}
+                endpoints:
+                    token: ${SNOOPY_SPOTIFY_TOKEN_AUTH_URL:/api/token}
+
+    buffer-directory: /opt/spotdl_tmp
