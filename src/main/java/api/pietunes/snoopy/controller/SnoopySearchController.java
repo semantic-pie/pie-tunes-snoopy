@@ -1,9 +1,9 @@
-package api.pietunes.snoopy.controllers;
+package api.pietunes.snoopy.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import api.pietunes.snoopy.models.Track;
-import api.pietunes.snoopy.services.SnoopySearchService;
+import api.pietunes.snoopy.model.Track;
+import api.pietunes.snoopy.service.SnoopySearchService;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 

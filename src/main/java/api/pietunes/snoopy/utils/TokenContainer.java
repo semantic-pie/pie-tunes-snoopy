@@ -7,18 +7,17 @@ import lombok.Data;
 
 public class TokenContainer {
 
-    private final static long expirationTime = 3600;
+    private final static long EXPIRATION_TIME = 3600;
 
     @Data
     static class Token {
+        private String value;
+        private long createdAt;
 
         public Token(String value) {
             this.value = value;
             this.createdAt = System.currentTimeMillis();
         }
-
-        private String value;
-        private long createdAt;
     }
     
     private static final Map<String, Token> tokenMap = new ConcurrentHashMap<>();
@@ -30,7 +29,7 @@ public class TokenContainer {
         
         long currentTime = System.currentTimeMillis();
         
-        if ((token.getCreatedAt() + expirationTime) <= currentTime) {
+        if ((token.getCreatedAt() + EXPIRATION_TIME) >= currentTime) {
             invalidateToken(identifier);
             return null;
         } else {

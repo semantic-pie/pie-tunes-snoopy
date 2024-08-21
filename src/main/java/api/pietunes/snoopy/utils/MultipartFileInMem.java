@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import java.nio.file.Files;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
@@ -31,7 +32,8 @@ public class MultipartFileInMem implements MultipartFile {
             return Files.probeContentType(file.toPath());
         } catch (IOException e) {
             e.printStackTrace();
-            return "application/octet-stream";
+            
+            return MediaType.APPLICATION_OCTET_STREAM_VALUE;
         }
     }
 

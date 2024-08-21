@@ -1,4 +1,4 @@
-package api.pietunes.snoopy.models;
+package api.pietunes.snoopy.model;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package api.pietunes.snoopy.services;
+package api.pietunes.snoopy.service;
 
 import java.io.File;
 import java.util.Arrays;
@@ -7,8 +7,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import api.pietunes.snoopy.clients.PieTunesDomainFeignClient;
-import api.pietunes.snoopy.models.TrackLoaderResponse;
+import api.pietunes.snoopy.client.PieTunesDomainFeignClient;
+import api.pietunes.snoopy.model.TrackLoaderResponse;
 import api.pietunes.snoopy.utils.MultipartFileInMem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
