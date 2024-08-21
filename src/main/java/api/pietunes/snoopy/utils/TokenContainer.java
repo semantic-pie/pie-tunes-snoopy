@@ -29,7 +29,7 @@ public class TokenContainer {
         
         long currentTime = System.currentTimeMillis();
         
-        if ((token.getCreatedAt() + EXPIRATION_TIME) <= currentTime) {
+        if ((token.getCreatedAt() + EXPIRATION_TIME) >= currentTime) {
             invalidateToken(identifier);
             return null;
         } else {
