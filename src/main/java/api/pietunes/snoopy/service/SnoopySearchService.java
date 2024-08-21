@@ -1,13 +1,13 @@
-package api.pietunes.snoopy.services;
+package api.pietunes.snoopy.service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import api.pietunes.snoopy.clients.SpotifyApiFeignClient;
-import api.pietunes.snoopy.models.SpotifySearchResult;
-import api.pietunes.snoopy.models.Track;
+import api.pietunes.snoopy.client.SpotifyApiFeignClient;
+import api.pietunes.snoopy.model.SpotifySearchResult;
+import api.pietunes.snoopy.model.Track;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;

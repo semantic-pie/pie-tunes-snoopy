@@ -1,7 +1,6 @@
 package api.pietunes.snoopy.utils;
 
-import api.pietunes.snoopy.services.SpotifyLoginService;
-
+import api.pietunes.snoopy.service.SpotifyLoginService;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 import lombok.AllArgsConstructor;

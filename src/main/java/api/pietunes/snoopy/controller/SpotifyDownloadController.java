@@ -1,10 +1,10 @@
-package api.pietunes.snoopy.controllers;
+package api.pietunes.snoopy.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import api.pietunes.snoopy.models.TrackLoaderResponse;
-import api.pietunes.snoopy.services.SpotDLDownloadService;
+import api.pietunes.snoopy.model.TrackLoaderResponse;
+import api.pietunes.snoopy.service.SpotDLDownloadService;
 import lombok.AllArgsConstructor;
 import reactor.core.publisher.Mono;
 

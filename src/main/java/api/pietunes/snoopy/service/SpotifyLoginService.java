@@ -1,9 +1,9 @@
-package api.pietunes.snoopy.services;
+package api.pietunes.snoopy.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import api.pietunes.snoopy.clients.SpotifyAuthFeignClient;
+import api.pietunes.snoopy.client.SpotifyAuthFeignClient;
 import api.pietunes.snoopy.utils.TokenContainer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
